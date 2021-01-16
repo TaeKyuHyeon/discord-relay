@@ -1,9 +1,9 @@
 'use strict';
 
-const Hapi = require('@hapi/hapi');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
+const server = require('./server');
 const config = require('./config');
 let channel;
 
@@ -22,40 +22,35 @@ client.on('message', async msg => {
 
 client.login(config.discord.id);
 
-const init = async () => {
-  
-  const server = Hapi.server({
-    port: 3000,
-    host: 'localhost'
-  });
-  
-  server.route({
-    method: 'POST',
-    path: '/msg',
-    handler: (request, h) => {
-      console.log(`${request.payload.msg}`);
-      let requestChannelName = request.payload.channel;
-      let requestMsessage = request.payload.msg;
+//////////////////////////////////////////////////
+// process termination signal handler
+// & promis unhandledRejection handler 
+// for graceful shutdown
 
-      if (channel.name !== requestChannelName)
-      {
-        console.log(`invalid channel name ${requestChannelName}`);
-        return `fail`;
-      }
+const finalize = () => {
+  // 1. stop new requset from client
+  server.stop();
 
-      channel.send(`request received: ${request.payload.msg}`);
-      return `${request.payload.msg}`;
-    }
-  });
+  // 2. close all data process
+  // logger flush.
 
-  await server.start();
-  console.log('Server running on %s', server.info.uri);
-};
+  // 3. stop process
+  process.exit(0);
+}
 
-process.on('unhandledRejection', (err) => {
-
-  console.log(err);
-  process.exit(1);
+process.on('SIGTERM', () => {
+  finalize();
 });
 
-init();
+process.on('SIGINT', () => {
+  finalize();
+});
+
+process.on('unhandledRejection', (err) => {
+  console.log(err);
+  finalize();
+});
+
+//////////////////////////////////////////////////
+
+server.start();
