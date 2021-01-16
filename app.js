@@ -1,26 +1,16 @@
 'use strict';
 
-const Discord = require('discord.js');
-const client = new Discord.Client();
+const DiscordBot = require('./modules/discord').DiscordBot;
+const DiscordController = require('./modules/discord').DiscordController;
 
-const server = require('./server');
 const config = require('./config');
-let channel;
+const server = require('./server');
+const discordBot = new DiscordBot(config.discord.id);
+const discordController = new DiscordController(discordBot);
 
-client.on('ready', () => {
-  // temporary initialize
-  channel = client.channels.cache.find(channel => channel.name === '일반');
-  // channel.send("Hello there!"); 
-});
+discordBot.start();
 
-// all server message parsing.
-client.on('message', async msg => {
-  if (msg.content === '@hey') {
-    msg.reply('Hi');
-  }
-});
-
-client.login(config.discord.id);
+server.registerController(discordController);
 
 //////////////////////////////////////////////////
 // process termination signal handler

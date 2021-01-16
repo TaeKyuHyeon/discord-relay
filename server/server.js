@@ -5,6 +5,8 @@ const Hapi = require('@hapi/hapi');
 class Server {
 
   constructor(host, port) {
+    this.controllers = [];
+
     this.hapiServer = new Hapi.server({
       host: host,
       port: port,      
@@ -32,8 +34,17 @@ class Server {
       }
     });
 
+    this.registerController = (controller) => {
+      this.controllers.push(controller);
+    }
+
     this.start = async () => {
       try {
+
+        for (const controller of this.controllers) {
+          await this.hapiServer.route(controller.routes());
+      }
+
         await this.hapiServer.start();
         // listen info logging
       } catch (e) {
