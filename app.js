@@ -34,6 +34,15 @@ const init = async () => {
     path: '/msg',
     handler: (request, h) => {
       console.log(`${request.payload.msg}`);
+      let requestChannelName = request.payload.channel;
+      let requestMsessage = request.payload.msg;
+
+      if (channel.name !== requestChannelName)
+      {
+        console.log(`invalid channel name ${requestChannelName}`);
+        return `fail`;
+      }
+
       channel.send(`request received: ${request.payload.msg}`);
       return `${request.payload.msg}`;
     }
