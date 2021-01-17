@@ -1,5 +1,8 @@
 'use strict'
 
+const Logger = require('../../common/logger');
+const logger = new Logger(module);
+
 class DiscordController {
 
   constructor(bot) {
@@ -14,14 +17,14 @@ class DiscordController {
           const msg = request.payload.msg;
 
           var channel = this.bot.findChannel(channelName);
-          if (channel !== undefined)
+          if (channel === undefined)
           {
-            channel.send(`request received: ${msg}`);
-            return msg;
+            logger.error(`invalid channel : ${channelName}`);
+            return 'fail';
           }
-
-          console.log(`invalid channel : ${channelName}`);
-          return 'fail';
+          
+          channel.send(`request received: ${msg}`);
+          return msg;
         },
       }];
     };

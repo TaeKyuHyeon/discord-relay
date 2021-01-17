@@ -1,5 +1,8 @@
 'use strict';
 
+const Logger = require('../../common/logger');
+const logger = new Logger(module);
+
 const Discord = require('discord.js');
 
 class DiscordBot {
@@ -22,6 +25,8 @@ class DiscordBot {
       (channelName) => this.channels.cache.find(c => c.name === channelName);
 
     this.start = () => {
+      
+      logger.info(`discord login with token: ${token}`);
       this.client.login(token);
     }
   }
