@@ -32,7 +32,7 @@ const logFileTransport = {
   showLevel: true,
   timestamp: timeStamp,
   formatter: formatter,
-  filename: `./log/discord-relay.%DATE%.log`,
+  filename: `./logs/discord-relay.%DATE%.log`,
   datePattern: `YYYY-MM-DD-HHmm`,
   zippedArche: true,
   maxFiles: `7d`,
@@ -43,7 +43,7 @@ const exceptionLogFileTransport = {
   timestamp: timeStamp,
   formatter: formatter,
   handleExceptions: true,
-  filename: `./log/exception/discord-relay-exception.log`
+  filename: `./logs/exception/discord-relay-exception.log`
 };
 
 const mainLogTransform = new (winston.transports.DailyRotateFile)(logFileTransport);

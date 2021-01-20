@@ -107,4 +107,4 @@ dist
 /config/*.config.js
 
 # Log files
-/log/*
+/logs/*
