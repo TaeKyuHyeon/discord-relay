@@ -4,11 +4,14 @@
 const Logger = require('./common/logger');
 const logger = new Logger(module);
 
+const AdminController = require('./common/admin');
 const DiscordBot = require('./modules/discord').DiscordBot;
 const DiscordController = require('./modules/discord').DiscordController;
 
 const config = require('./config');
 const server = require('./server');
+
+const adminController = new AdminController();
 const discordBot = new DiscordBot(config.discord.id);
 const discordController = new DiscordController(discordBot);
 
@@ -16,6 +19,7 @@ logger.info(`Application Start`);
 
 discordBot.start();
 
+server.registerController(adminController);
 server.registerController(discordController);
 
 //////////////////////////////////////////////////
