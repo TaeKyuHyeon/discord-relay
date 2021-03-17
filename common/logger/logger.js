@@ -26,37 +26,39 @@ const configWinston = winston.config;
     (options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : '')
 }
 
-const logFileTransport = {
-  colorize: true,
-  level: config.server.logger,
-  showLevel: true,
-  timestamp: timeStamp,
-  formatter: formatter,
-  filename: `./logs/discord-relay.%DATE%.log`,
-  datePattern: `YYYY-MM-DD-HHmm`,
-  zippedArche: true,
-  maxFiles: `7d`,
-  frequency: '1m' //‘#m’ or ‘#h’ e.g., ‘5m’ or ‘3h’.  
-};
-
-const exceptionLogFileTransport = {
-  timestamp: timeStamp,
-  formatter: formatter,
-  handleExceptions: true,
-  filename: `./logs/exception/discord-relay-exception.log`
-};
-
-const mainLogTransform = new (winston.transports.DailyRotateFile)(logFileTransport);
+const mainLogTransform = new (winston.transports.DailyRotateFile)(
+  {
+    colorize: true,
+    level: config.server.logger,
+    showLevel: true,
+    timestamp: timeStamp,
+    formatter: formatter,
+    filename: `./logs/discord-relay.%DATE%.log`,
+    datePattern: `YYYY-MM-DD-HHmm`,
+    zippedArche: true,
+    maxFiles: `7d`,
+    frequency: '1m' //‘#m’ or ‘#h’ e.g., ‘5m’ or ‘3h’.  
+  });
 
 const logger =winston.createLogger({
   transports: [
     mainLogTransform
   ],
   exceptionHandlers: [
-    new (winston.transports.File)(exceptionLogFileTransport)
+    new (winston.transports.File)({
+      timestamp: timeStamp,
+      formatter: formatter,
+      handleExceptions: true,
+      filename: `./logs/exception/discord-relay-exception.log`
+    })
   ],
   rejectionHandlers: [
-    new (winston.transports.File)(exceptionLogFileTransport)
+    new (winston.transports.File)({
+      timestamp: timeStamp,
+      formatter: formatter,
+      handleExceptions: true,
+      filename: `./logs/exception/discord-relay-exception.log`
+    })
   ]
 });
 
