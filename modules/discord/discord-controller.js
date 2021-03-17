@@ -23,7 +23,27 @@ class DiscordController {
             return 'fail';
           }
           
-          channel.send(`request received: ${msg}`);
+          await channel.send(`request received: ${msg}`);
+          return msg;
+        },
+      },
+      {
+        method: 'POST',
+        path: '/discord/messages',
+        handler: async (request, h) => {
+          const channelIds = request.payload.channelIds;
+          const msg = request.payload.msg;
+
+          var channels = this.bot.findTextChannelByIds(channelIds);
+          if (channels === undefined || channels.length === 0)
+          {
+            logger.error(`failed to find channel id: ${channelIds.join()}`);
+            return 'fail';
+          }
+          
+          channels.forEach(async element => {
+            await element.send(`request received: ${msg}`);
+          });
           return msg;
         },
       }];
