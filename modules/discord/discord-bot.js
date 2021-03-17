@@ -17,17 +17,43 @@ class DiscordBot {
 
     this.client.on('message', async msg => {
       if (msg.content === '@hey') {
-        msg.reply('Hi');
+        await msg.reply('Hi');
+      }
+
+      // for debug
+      if (msg.content === '@channel') {
+        let channelList = this.client.channels.cache.array();
+        await msg.reply(channelList.join());
+      }
+
+      if (msg.content === '@server') {
+        let serverList = this.client.guilds.cache.array();
+        await msg.reply(serverList.join());
+      }
+
+      if (msg.content === '@channelId') {
+        await msg.reply(msg.channel.id);
       }
     });
 
     this.findChannel = 
       (channelName) => this.channels.cache.find(c => c.name === channelName);
 
-    this.start = () => {
+    this.findTextChannelByIds =
+      (channelIds) => this.channels.cache.filter(e => {
+        //console.log(`${e} is ${channelIds.includes(Number(e.id))}`);
+        if (e.type !== 'text')
+        {
+          return false;
+        }
+
+        return channelIds.includes(Number(e.id));
+      });
+
+    this.start = async () => {
       
       logger.info(`discord login with token: ${token}`);
-      this.client.login(token);
+      await this.client.login(token);
     }
   }
 }
