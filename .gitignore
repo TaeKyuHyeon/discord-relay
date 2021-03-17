@@ -105,6 +105,7 @@ dist
 
 # Property files
 /config/*.config.js
+/config/*.config.default.js
 
 # Log files
 /logs/*
