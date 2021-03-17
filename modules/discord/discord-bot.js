@@ -17,22 +17,22 @@ class DiscordBot {
 
     this.client.on('message', async msg => {
       if (msg.content === '@hey') {
-        msg.reply('Hi');
+        await msg.reply('Hi');
       }
 
       // for debug
       if (msg.content === '@channel') {
         let channelList = this.client.channels.cache.array();
-        msg.reply(channelList.join());
+        await msg.reply(channelList.join());
       }
 
       if (msg.content === '@server') {
         let serverList = this.client.guilds.cache.array();
-        msg.reply(serverList.join());
+        await msg.reply(serverList.join());
       }
 
       if (msg.content === '@channelId') {
-        msg.reply(msg.channel.id);
+        await msg.reply(msg.channel.id);
       }
     });
 
@@ -50,10 +50,10 @@ class DiscordBot {
         return channelIds.includes(Number(e.id));
       });
 
-    this.start = () => {
+    this.start = async () => {
       
       logger.info(`discord login with token: ${token}`);
-      this.client.login(token);
+      await this.client.login(token);
     }
   }
 }

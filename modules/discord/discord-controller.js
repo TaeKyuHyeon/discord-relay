@@ -23,7 +23,7 @@ class DiscordController {
             return 'fail';
           }
           
-          channel.send(`request received: ${msg}`);
+          await channel.send(`request received: ${msg}`);
           return msg;
         },
       },
@@ -41,8 +41,8 @@ class DiscordController {
             return 'fail';
           }
           
-          channels.forEach(element => {
-            element.send(`request received: ${msg}`);
+          channels.forEach(async element => {
+            await element.send(`request received: ${msg}`);
           });
           return msg;
         },
